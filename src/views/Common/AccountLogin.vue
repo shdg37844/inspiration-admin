@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import loginService from '@/services/login';
 
 const smsRules = {
   phone: [
@@ -22,14 +23,48 @@ const formData = ref({
 const smsText = ref('发送验证码')
 const smsDisabled = ref(false)
 
-function handleSmsCode(e) {
-  console.log(e)
+const sendCode = ref(null)
+
+async function handleSmsCode() {
+  if (smsDisabled.value) return;
+
+  const phoneNumber = formData.value.phone
+  try{
+    const response = await loginService.sendSms(phoneNumber)
+    startCountdown();
+    //console.log('完整响应对象：', response);
+    sendCode.value = response;
+  } catch(e) {
+    console.error('发送验证码错误:', e);
+  }
 }
 
-function handleSubmit(e) {
-  console.log(e)
+//验证码倒计时
+function startCountdown() {
+  let seconds = 60;
+  smsDisabled.value = true;
+
+  const interval = setInterval(() => {
+    seconds --;
+    smsText.value = `${seconds}秒后重新获取`
+    if (seconds <= 0) {
+      clearInterval(interval);
+      smsText.value = '发送验证码';
+      smsDisabled.value = false;
+    }
+  }, 1000)
+}
+
+async function handleSubmit() {
+  if (formData.value.code === sendCode.value && sendCode.value.length > 0) {
+    await loginService.login();
+    alert("登录成功");
+  } else {
+    alert('请输入正确的验证码')
+  }
 }
 </script>
+
 <template>
   <div class="login-page">
     <div class="company-container">
@@ -84,7 +119,6 @@ function handleSubmit(e) {
   padding-top: 160px;
   box-sizing: border-box;
 }
-
 .company-container {
   text-align: center;
   .company-info-logo {

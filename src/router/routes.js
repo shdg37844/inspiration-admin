@@ -3,8 +3,8 @@ import Home from '@/views/HomeIndex.vue'
 import NotFound from '@/views/Common/NotFound.vue'
 import Forbidden from '@/views/Common/Forbidden.vue'
 import AccountLogin from '@/views/Common/AccountLogin.vue'
+
 import routesPermission from './routesPermission'
-import routesArticle from './routesArticle'
 
 export default [
   {
@@ -20,7 +20,6 @@ export default [
         name: 'Home',
         component: Home
       },
-      ...routesArticle,
       ...routesPermission
     ]
   },
