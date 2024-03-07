@@ -23,17 +23,14 @@ const formData = ref({
 const smsText = ref('发送验证码')
 const smsDisabled = ref(false)
 
-const sendCode = ref(null)
 
 async function handleSmsCode() {
   if (smsDisabled.value) return;
 
   const phoneNumber = formData.value.phone
   try{
-    const response = await loginService.sendSms(phoneNumber)
+    await loginService.sendSms(phoneNumber)
     startCountdown();
-    //console.log('完整响应对象：', response);
-    sendCode.value = response;
   } catch(e) {
     console.error('发送验证码错误:', e);
   }
@@ -56,13 +53,23 @@ function startCountdown() {
 }
 
 async function handleSubmit() {
-  if (formData.value.code === sendCode.value && sendCode.value.length > 0) {
-    await loginService.login();
-    alert("登录成功");
-  } else {
-    alert('请输入正确的验证码')
+  const phone = formData.value.phone;
+  const code = formData.value.code;
+  try {
+    const response = await loginService.login(phone, code);
+
+      if (response.code === 1) {
+        alert('登录成功');
+        
+      } else {
+        alert(response.message || '登录失败');
+      }
+  } catch (error) {
+    console.error('请求失败:', error);
+    alert('请求失败: ' + error.message);
   }
 }
+
 </script>
 
 <template>

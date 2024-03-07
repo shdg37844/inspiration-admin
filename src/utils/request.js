@@ -61,14 +61,19 @@ axiosInstance.interceptors.request.use((config) => {
 
 // 添加响应拦截器 ( 格式化返回数据，把 data 拿掉 )
 axiosInstance.interceptors.response.use(
-  (res) => {
-    switch (true) {
-      case !!res.data.error_code:
-        ElMessage.error(res.data.msg)
-        return Promise.reject(res.data)
-      default:
-        return res.data.data
-    }
+  // (res) => {
+  //   switch (true) {
+  //     case !!res.data.error_code:
+  //       ElMessage.error(res.data.msg)
+  //       return Promise.reject(res.data)
+  //     default:
+  //       return res.data.data
+  //   }
+  // },
+  
+  (response) => {
+    // 直接返回响应数据的主体，不尝试访问 .data 属性
+    return response.data;
   },
   (error) => {
     handleErrorRequest(error)
