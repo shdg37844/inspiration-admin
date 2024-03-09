@@ -1,6 +1,9 @@
 <script setup>
 import { ref } from 'vue'
 import loginService from '@/services/login';
+import Cookies from 'js-cookie';
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 const smsRules = {
   phone: [
@@ -55,12 +58,16 @@ function startCountdown() {
 async function handleSubmit() {
   const phone = formData.value.phone;
   const code = formData.value.code;
+  const TOKEN_KEY = 'web_token';
   try {
     const response = await loginService.login(phone, code);
 
       if (response.code === 1) {
         alert('登录成功');
-        
+        let token = response.data.token;
+        // 将token保存到cookies中，有效期为1天
+        Cookies.set(TOKEN_KEY, token, { expires: 1 });
+        router.replace({ name: 'Home'});
       } else {
         alert(response.message || '登录失败');
       }

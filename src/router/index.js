@@ -51,6 +51,7 @@ appRouter.beforeEach(async (to, from, next) => {
       appRouter.firstInit = true
     } catch (e) {
       next()
+      return
     }
   }
 
