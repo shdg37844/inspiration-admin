@@ -14,7 +14,7 @@ import { HeartOutlined, PoweroffOutlined, DownOutlined } from '@ant-design/icons
       <el-dropdown style="height: 100%">
         <div class="bar-info-container">
           <i class="userInfo-avatar"></i>
-          <span class="userInfo-name">Jax</span>
+          <span class="userInfo-name">ws</span>
           <DownOutlined :style="{ fontSize: '10px', marginLeft: '4px' }" />
         </div>
         <template #dropdown>

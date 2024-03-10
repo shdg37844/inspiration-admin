@@ -1,8 +1,10 @@
 <script setup>
 import { ref } from 'vue'
-import loginService from '@/services/login';
-import Cookies from 'js-cookie';
 import { useRouter } from 'vue-router';
+import { useStore } from '@/stores/index.js'; 
+import loginService from '@/services/login';
+import permissionService from '@/services/permission';
+import Cookies from 'js-cookie';
 const router = useRouter();
 
 const smsRules = {
@@ -25,7 +27,6 @@ const formData = ref({
 
 const smsText = ref('发送验证码')
 const smsDisabled = ref(false)
-
 
 async function handleSmsCode() {
   if (smsDisabled.value) return;
@@ -62,15 +63,20 @@ async function handleSubmit() {
   try {
     const response = await loginService.login(phone, code);
 
-      if (response.code === 1) {
-        alert('登录成功');
-        let token = response.data.token;
-        // 将token保存到cookies中，有效期为1天
-        Cookies.set(TOKEN_KEY, token, { expires: 1 });
-        router.replace({ name: 'Home'});
-      } else {
-        alert(response.message || '登录失败');
-      }
+    if (response.code === 1) {
+      alert('登录成功');
+      let token = response.data.token;
+      Cookies.set(TOKEN_KEY, token, { expires: 1 });  // 将token保存到cookies中，有效期为1天
+
+      const store = useStore();
+      store.setUserInfo(response.data.userInfo);  // 设置用户信息
+      const permissionResponse = await permissionService.permissions();  // 请求权限列表
+      store.setPermissions(permissionResponse.data.permissions);  // 设置权限信息
+
+      router.replace({ name: 'Home'});
+    } else {
+      alert(response.message || '登录失败');
+    }
   } catch (error) {
     console.error('请求失败:', error);
     alert('请求失败: ' + error.message);
