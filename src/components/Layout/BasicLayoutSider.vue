@@ -12,6 +12,7 @@ const isCollapse = ref(false)
 const navRoutes = ref(formatRoutes(routesAll, permissions))
 const activeIndex = ref(route.name)
 </script>
+
 <template>
   <div class="sider-section" :style="[{ width: isCollapse ? '80px' : '243px' }]">
     <div class="logo-section">

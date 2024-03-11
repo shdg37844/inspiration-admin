@@ -71,7 +71,11 @@ async function handleSubmit() {
       const store = useStore();
       store.setUserInfo(response.data.userInfo);  // 设置用户信息
       const permissionResponse = await permissionService.permissions();  // 请求权限列表
-      store.setPermissions(permissionResponse.data.permissions);  // 设置权限信息
+      store.setPermissions(permissionResponse.data.permissionSlug);  // 设置权限信息
+      console.log('返回的permission',permissionResponse)
+      // 在登录成功并设置权限信息后
+      console.log('存储到状态管理库中的permissions:', store.permissions);
+
 
       router.replace({ name: 'Home'});
     } else {

@@ -7,8 +7,9 @@ export function filterPermissionRoutes(routes, permissions) {
   routes.forEach((data) => {
     const route = { ...data }
     const notPermission = !route.meta || !route.meta.permission
-    const hasPermission =
-      !notPermission && route.meta.permission.split(',').some((item) => permissions.includes(item))
+    const hasPermission = !notPermission && route.meta.permission.split(',').some((item) => {
+      return permissions.includes(item);
+    });
     const passPermission = notPermission || hasPermission
     let hasPath = true
     if (route.children) {
