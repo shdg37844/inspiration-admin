@@ -3,11 +3,10 @@ import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from '@/stores/index'
 import { RotateLeftOutlined } from '@ant-design/icons-vue'
-import routesAll from '@/router/routes'
 import { formatRoutes } from '@/utils/permission'
+import routesAll from '@/router/routes'
 const route = useRoute()
 const { permissions } = useStore()
-
 const isCollapse = ref(false)
 const navRoutes = ref(formatRoutes(routesAll, permissions))
 const activeIndex = ref(route.name)
