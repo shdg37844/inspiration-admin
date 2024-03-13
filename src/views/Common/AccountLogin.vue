@@ -1,9 +1,8 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router';
-import { useStore } from '@/stores/index.js'; 
+//import { useStore } from '@/stores/index.js'; 
 import loginService from '@/services/login';
-import permissionService from '@/services/permission';
 import Cookies from 'js-cookie';
 const router = useRouter();
 
@@ -67,15 +66,7 @@ async function handleSubmit() {
       alert('登录成功');
       let token = response.data.token;
       Cookies.set(TOKEN_KEY, token, { expires: 1 });  // 将token保存到cookies中，有效期为1天
-
-      const store = useStore();
-      store.setUserInfo(response.data.userInfo);  // 设置用户信息
-      const permissionResponse = await permissionService.permissions();  // 请求权限列表
-      store.setPermissions(permissionResponse.data.permissionSlug);  // 设置权限信息
-      console.log('返回的permission',permissionResponse)
-      // 在登录成功并设置权限信息后
-      console.log('存储到状态管理库中的permissions:', store.permissions);
-
+      localStorage.setItem(TOKEN_KEY, token); // 保存Token到localStorage，页面刷新后也能从本地存储中恢复Token和权限信息，保持用户的登录状态和访问权限。
 
       router.replace({ name: 'Home'});
     } else {

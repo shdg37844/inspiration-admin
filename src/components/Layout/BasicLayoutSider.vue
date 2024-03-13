@@ -62,7 +62,7 @@ const activeIndex = ref(route.name)
   </div>
 </template>
 
-<style type="text/css" lang="less" scoped>
+<style  type="text/css" lang="less" scoped>
 .sider-section {
   position: relative;
   width: 243px;

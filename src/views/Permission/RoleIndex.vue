@@ -1,4 +1,8 @@
 <script setup>
+import { ref } from 'vue';
+import roleService from '@/services/role';
+
+const data = ref([]);
 const columns = [
   {
     title: 'ID',
@@ -15,35 +19,49 @@ const columns = [
     key: 'action',
   },
 ];
-const data = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-];
+
+async function fetchRoleInfo() {
+  try {
+    const roleResponse = await roleService.getRoleInfo();
+    data.value = roleResponse.data.roles
+    
+  } catch(e) {
+    console.error(e);
+  }
+}
+fetchRoleInfo();
+
+async function handleAddRole() {
+
+}
+
+
 </script>
 
 <template>
-    <div>
-        <a-button type="primary">创建角色</a-button>
-        <a-table :columns="columns" :data-source="data">
-            <template #bodyCell="{ column }">
-                <template v-if="column.key === 'action'">
-                    <span>
-                    <a>查看</a>
-                    <a-divider type="vertical" />
-                    <a>删除</a>
-                    <a-divider type="vertical" />
-                    </span>
-                </template>
-            </template>
-        </a-table>
+    <div class="body-container">
+      <div class="body-header">
+        <a-button type="primary" class="addRole-btn" @click="handleAddRole">创建角色</a-button>
+      </div>
+      <a-table :columns="columns" :data-source="data">
+        <template #bodyCell="{ column }">
+          <template v-if="column.key === 'action'">
+            <span>
+              <a>查看</a>
+              <a-divider type="vertical" />
+              <a>删除</a>
+              <a-divider type="vertical" />
+            </span>
+          </template>
+        </template>
+      </a-table>
     </div>
 </template>
 
 <style lang="less" scoped>
-
+.body-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 15px;
+}
 </style>

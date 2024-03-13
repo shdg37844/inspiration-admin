@@ -6,6 +6,7 @@ import userService from '@/services/user'
 import permissionService from '@/services/permission'
 import { useStore } from '@/stores/index.js'
 
+
 const TOKEN_KEY = 'web_token'
 const appRouter = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,6 +28,7 @@ appRouter.beforeEach(async (to, from, next) => {
 
   const store = useStore()
   const token = cookies.get(TOKEN_KEY)
+  //const token = localStorage.getItem(TOKEN_KEY)
 
   // 没有 TOKEN 的情况下的处理，要么跳走，要么去登录页面。
   if (!token && !['AccountLogin'].includes(to.name)) {
@@ -37,8 +39,16 @@ appRouter.beforeEach(async (to, from, next) => {
   // 有 TOKEN 的情况下只请求一次用户信息
   if (token && !appRouter.firstInit) {
     try {
-      const userInfo = await userService.getUserInfo()
-      const permissions = await permissionService.getPermissions()
+      let userInfo = JSON.parse(localStorage.getItem('userInfo'));
+      let permissions = JSON.parse(localStorage.getItem('permissions'));
+
+      if (!userInfo || !permissions) {
+        const userInfoResponse = await userService.getUserInfo()
+        const permissionsResponse = await permissionService.permissions()
+        localStorage.setItem('userInfo', JSON.stringify(userInfoResponse.data.userInfo));
+        localStorage.setItem('permissions', JSON.stringify(permissionsResponse.data.permissionSlug));
+      }
+
       store.setUserInfo(userInfo)
       store.setPermissions(permissions)
 
