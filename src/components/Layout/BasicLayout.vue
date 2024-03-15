@@ -15,21 +15,17 @@ const breadcrumb = computed(() => route.matched.filter((data) => data.meta.bread
     <BasicLayoutSider class="page-sider" />
     <div class="page-mainer">
       <BasicLayoutHeader class="page-header" />
+      <div class="breadcrumb-container">
+        <el-breadcrumb>
+          <el-breadcrumb-item v-for="step in breadcrumb" :key="step.path">
+            <router-link :to="step.meta.breadcrumb.path">
+              {{ step.meta.breadcrumb.name }}
+            </router-link>
+          </el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
       <div class="page-body">
         <el-scrollbar>
-          <div class="breadcrumb-container">
-            <el-breadcrumb>
-              <el-breadcrumb-item v-for="step in breadcrumb" :key="step.name">
-                <el-breadcrumb-item
-                  :to="{ name: step.meta.breadcrumb.path }"
-                  :key="step.name"
-                  :replace="true"
-                >
-                  {{ step.meta.breadcrumb.name }}
-                </el-breadcrumb-item>
-              </el-breadcrumb-item>
-            </el-breadcrumb>
-          </div>
           <router-view></router-view>
         </el-scrollbar>
       </div>
@@ -50,13 +46,15 @@ const breadcrumb = computed(() => route.matched.filter((data) => data.meta.bread
   flex-direction: column;
   .page-body {
     flex: 1;
-    padding: 8px;
+    margin:8px;
+    //padding: 8px;
     height: 1px;
+    background-color: #fff;
   }
   .breadcrumb-container {
     flex: none;
     width: 100%;
-    padding: 4px 8px;
+    padding: 15px 15px 7px 15px;
   }
   .page-header {
     flex: none;

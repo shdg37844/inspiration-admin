@@ -1,7 +1,8 @@
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import roleService from '@/services/role';
-
+const router = useRouter();
 const data = ref([]);
 const columns = [
   {
@@ -31,17 +32,13 @@ async function fetchRoleInfo() {
 }
 fetchRoleInfo();
 
-async function handleAddRole() {
-
-}
-
 
 </script>
 
 <template>
     <div class="body-container">
       <div class="body-header">
-        <a-button type="primary" class="addRole-btn" @click="handleAddRole">创建角色</a-button>
+        <a-button type="primary" class="addRole-btn" @click="$router.push('/permission/role/create')">创建角色</a-button>
       </div>
       <a-table :columns="columns" :data-source="data">
         <template #bodyCell="{ column }">

@@ -6,6 +6,8 @@ const RoleShow = () =>
   import(/* webpackChunkName: "permission" */ '@/views/Permission/RoleShow.vue')
 const ManagerIndex = () =>
   import(/* webpackChunkName: "permission" */ '@/views/Permission/ManagerIndex.vue')
+const RoleCreate = () =>
+  import(/* webpackChunkName: "permission" */ '@/views/Permission/RoleCreate.vue')
 
 export default [
   {
@@ -19,7 +21,8 @@ export default [
         title: '权限设置'
       },
       breadcrumb: {
-        name: '权限'
+        name: '权限',
+        path:'/permission'
       }
     },
     children: [
@@ -33,7 +36,20 @@ export default [
             title: '角色列表'
           },
           breadcrumb: {
-            name: '角色列表'
+            name: '角色列表',
+            path: '/permission/role'
+          }
+        },
+      },
+      {
+        path: 'role/create',
+        name: 'RoleCreate',
+        component: RoleCreate,
+        meta: {
+          breadcrumb: {
+            name: '角色创建',
+            parent:'RoleIndex',
+            path: '/permission/role/create'
           }
         }
       },
