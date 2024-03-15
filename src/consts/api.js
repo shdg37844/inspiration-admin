@@ -3,7 +3,8 @@ const WEB_PREFIX = `${PREFIX}/web`
 const ADMIN_PREFIX = `${PREFIX}/admin`
 
 export default {
-  userInfo: `${ADMIN_PREFIX}/users/user-info`,
+  userInfo: `${ADMIN_PREFIX}/users/user-info`,  // 获得当前登录的用户信息
+  users: `${ADMIN_PREFIX}/users`,  //获得所有用户信息
   ossToken: `${PREFIX}/api/file/alioss-token`,
   ossStore: `${PREFIX}/api/file/alioss-store`,
   permissions: `${ADMIN_PREFIX}/permissions`,

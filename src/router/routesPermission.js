@@ -73,7 +73,8 @@ export default [
             title: '管理员'
           },
           breadcrumb: {
-            name: '管理员'
+            name: '管理员',
+            path:'/permission/manager'
           }
         }
       }

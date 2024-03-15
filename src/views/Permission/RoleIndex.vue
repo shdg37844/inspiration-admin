@@ -1,8 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import roleService from '@/services/role';
-const router = useRouter();
+import roleService from '@/services/role.js';
 const data = ref([]);
 const columns = [
   {
@@ -59,6 +57,8 @@ fetchRoleInfo();
 .body-header {
   display: flex;
   justify-content: flex-end;
+  padding-top:15px;
+  padding-right:20px;
   margin-bottom: 15px;
 }
 </style>
