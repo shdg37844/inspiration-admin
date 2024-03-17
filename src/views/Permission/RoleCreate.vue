@@ -10,7 +10,8 @@ const onFinish = values => {
 const onFinishFailed = errorInfo => {
   console.log('Failed:', errorInfo);
 };
-const value = ref([]);
+const roleValue = ref([]);
+const inspirationValue = ref([]);
 </script>
 
 <template>
@@ -34,7 +35,7 @@ const value = ref([]);
                     <div class="permission-title">
                         <span>权限管理</span>
                     </div>
-                    <a-checkbox-group v-model:value="value" style="width: 100%" class="permission-body">
+                    <a-checkbox-group v-model:value="roleValue" style="width: 100%" class="permission-body">
                         <a-row>
                             <a-col :span="8">
                                 <a-checkbox value="A">角色-添加</a-checkbox>
@@ -61,7 +62,7 @@ const value = ref([]);
                     <div class="permission-title">
                         <span>灵感库管理</span>
                     </div>
-                    <a-checkbox-group v-model:value="value" style="width: 100%"  class="permission-body">
+                    <a-checkbox-group v-model:value="inspirationValue" style="width: 100%"  class="permission-body">
                         <a-row>
                             <a-col :span="8">
                                 <a-checkbox value="A">类目-添加</a-checkbox>

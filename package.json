@@ -14,7 +14,7 @@
     "@ant-design/icons-vue": "^7.0.1",
     "ant-design-vue": "^4.1.2",
     "axios": "^1.6.7",
-    "element-plus": "^2.5.4",
+    "element-plus": "^2.6.1",
     "js-cookie": "^3.0.5",
     "nprogress": "^0.2.0",
     "pinia": "^2.1.7",

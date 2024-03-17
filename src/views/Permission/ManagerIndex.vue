@@ -44,6 +44,9 @@ fetchUserInfo();
 
 <template>
     <div class="body-container">
+        <div class="body-header">
+            <a-button type="primary" class="addRole-btn" @click="$router.push('/permission/manager/create')">创建管理员</a-button>
+      </div>
         <a-table :columns="columns" :data-source="data">
             <template #bodyCell="{ column }">
               <template v-if="column.key === 'action'">
@@ -55,11 +58,17 @@ fetchUserInfo();
                 </span>
               </template>
             </template>
-      </a-table>
+        </a-table>
     </div>
 </template>
 
 <style lang="less" scoped>
-
+.body-header {
+  display: flex;
+  justify-content: flex-end;
+  padding-top:15px;
+  padding-right:20px;
+  margin-bottom: 15px;
+}
 </style>
 

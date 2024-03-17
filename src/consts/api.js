@@ -10,5 +10,6 @@ export default {
   permissions: `${ADMIN_PREFIX}/permissions`,
   sendAliyunSms: `${ADMIN_PREFIX}/aliyun-sms`, // 发送短信验证码
   login: `${ADMIN_PREFIX}/login`,
-  roleInfo: `${ADMIN_PREFIX}/role`
+  roleInfo: `${ADMIN_PREFIX}/role`,
+  roleAction: `${ADMIN_PREFIX}/role/:id`,
 }
