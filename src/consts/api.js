@@ -12,4 +12,6 @@ export default {
   login: `${ADMIN_PREFIX}/login`,
   roleInfo: `${ADMIN_PREFIX}/role`,
   roleAction: `${ADMIN_PREFIX}/role/:id`,
+  userRole: `${ADMIN_PREFIX}/role/:id/users`,
+  RolePermissions: `${ADMIN_PREFIX}/role/:id/permissions`,
 }

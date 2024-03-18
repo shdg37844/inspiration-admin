@@ -5,6 +5,7 @@ import Forbidden from '@/views/Common/Forbidden.vue'
 import AccountLogin from '@/views/Common/AccountLogin.vue'
 
 import routesPermission from './routesPermission'
+import routesInspiration from './routesInspiration'
 
 export default [
   {
@@ -20,7 +21,8 @@ export default [
         name: 'Home',
         component: Home
       },
-      ...routesPermission
+      ...routesPermission,
+      ...routesInspiration
     ]
   },
   {

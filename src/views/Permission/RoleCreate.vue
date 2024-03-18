@@ -1,17 +1,31 @@
 <script setup>
 import {ref} from 'vue'
+import roleService from '@/services/role.js';
+//import roleService from '@/services/role.js';
 
 const formState = ref({
   roleName: '',
 });
-const onFinish = values => {
-  console.log('Success:', values);
-};
-const onFinishFailed = errorInfo => {
-  console.log('Failed:', errorInfo);
-};
 const roleValue = ref([]);
 const inspirationValue = ref([]);
+
+async function createRole() {
+    const roleName = formState.value.roleName
+
+    try {
+        const insertedRoleId = await roleService.createRole(roleName);
+        const submitData = {
+            id: insertedRoleId,
+            roleValue: roleValue.value,
+            inspirationValue: inspirationValue.value
+        }
+        await roleService.createRolePermissions(submitData);
+
+
+    } catch(e) {
+        console.error(e);
+    }
+}
 </script>
 
 <template>
@@ -20,7 +34,7 @@ const inspirationValue = ref([]);
             <h3 class="section-title">角色信息</h3>
             <div class="section-content">
                 <a-form :model="formState" name="basic" :label-col="{ span: 2 }"
-                :wrapper-col="{ span: 6 }" autocomplete="off" @finish="onFinish" @finishFailed="onFinishFailed">
+                :wrapper-col="{ span: 6 }" autocomplete="off">
                     <a-form-item label="角色名称" name="roleName"
                     :rules="[{ required: true, message: '请输入角色名称!' }]">
                         <a-input v-model:value="formState.roleName" />
@@ -79,7 +93,7 @@ const inspirationValue = ref([]);
             </div>
         </div>
         <div class="create-btn-box">
-            <a-button type="primary">创建</a-button>
+            <a-button type="primary" @click="createRole">创建</a-button>
         </div>
     </div>
 
