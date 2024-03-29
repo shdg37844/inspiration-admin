@@ -31,6 +31,16 @@ async function handleSmsCode() {
   if (smsDisabled.value) return;
 
   const phoneNumber = formData.value.phone
+
+  const phonePattern = /^1[3456789]\d{9}$/;
+  if (!phonePattern.test(phoneNumber)) {
+    alert('请输入中国大陆的手机号码！');
+    return
+  } else if (!phoneNumber) {
+    alert('手机号码不能为空！');
+    return
+  }
+
   try{
     await loginService.sendSms(phoneNumber)
     startCountdown();

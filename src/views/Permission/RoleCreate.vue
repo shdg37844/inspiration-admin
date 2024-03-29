@@ -1,31 +1,46 @@
 <script setup>
-import {ref} from 'vue'
+import { ref } from 'vue'
 import roleService from '@/services/role.js';
-//import roleService from '@/services/role.js';
+import permissionService from '@/services/permission.js';
+import { useRouter } from 'vue-router';
 
 const formState = ref({
-  roleName: '',
+    roleName: '',
 });
-const roleValue = ref([]);
-const inspirationValue = ref([]);
+const permissionData = ref([])
+const selectedPermissionsByGroup = ref({})
+const router = useRouter();
 
-async function createRole() {
-    const roleName = formState.value.roleName
-
+async function fetchPermission() {
     try {
-        const insertedRoleId = await roleService.createRole(roleName);
-        const submitData = {
-            id: insertedRoleId,
-            roleValue: roleValue.value,
-            inspirationValue: inspirationValue.value
-        }
-        await roleService.createRolePermissions(submitData);
+        const response = await permissionService.getAllPermissions();
+        permissionData.value = response.data.permissions;
 
-
-    } catch(e) {
+    } catch (e) {
         console.error(e);
     }
 }
+fetchPermission()
+
+async function createRole() {
+    const roleName = formState.value.roleName
+    const permissions = Object.values(selectedPermissionsByGroup.value).flat();
+    //console.log("选中的permission", permissions)
+
+    try {
+        const response = await roleService.createRole(roleName, permissions);
+
+        if (response.error_code === 0) {
+            alert("角色创建成功")
+            router.push('/permission/role')
+        }
+
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+
 </script>
 
 <template>
@@ -33,10 +48,9 @@ async function createRole() {
         <div class="content-box">
             <h3 class="section-title">角色信息</h3>
             <div class="section-content">
-                <a-form :model="formState" name="basic" :label-col="{ span: 2 }"
-                :wrapper-col="{ span: 6 }" autocomplete="off">
-                    <a-form-item label="角色名称" name="roleName"
-                    :rules="[{ required: true, message: '请输入角色名称!' }]">
+                <a-form :model="formState" name="basic" :label-col="{ span: 2 }" :wrapper-col="{ span: 6 }"
+                    autocomplete="off">
+                    <a-form-item label="角色名称" name="roleName" :rules="[{ required: true, message: '请输入角色名称!' }]">
                         <a-input v-model:value="formState.roleName" />
                     </a-form-item>
                 </a-form>
@@ -45,51 +59,19 @@ async function createRole() {
         <div class="content-box">
             <h3 class="section-title">权限信息</h3>
             <div class="permission-section">
-                <div class="permission-container">
+                <div class="permission-container" v-for="group in permissionData" :key="group.id">
                     <div class="permission-title">
-                        <span>权限管理</span>
+                        <span>{{ group.name }}</span>
                     </div>
-                    <a-checkbox-group v-model:value="roleValue" style="width: 100%" class="permission-body">
+                    <a-checkbox-group v-model:value="selectedPermissionsByGroup[group.id]" style="width: 100%"
+                        class="permission-body">
                         <a-row>
-                            <a-col :span="8">
-                                <a-checkbox value="A">角色-添加</a-checkbox>
+                            <a-col :span="8" v-for="child in group.children" :key="child.id">
+                                <a-checkbox :value="child.id">{{ child.name }}</a-checkbox>
                             </a-col>
-                            <a-col :span="8">
-                                <a-checkbox value="B">角色-删除</a-checkbox>
-                            </a-col>
-                            <a-col :span="8">
-                              <a-checkbox value="C">角色-编辑</a-checkbox>
-                            </a-col>
-                            <a-col :span="8">
-                              <a-checkbox value="D">管理员-添加</a-checkbox>
-                            </a-col>
-                            <a-col :span="8">
-                              <a-checkbox value="E">管理员-删除</a-checkbox>
-                            </a-col>
-                            <a-col :span="8">
-                              <a-checkbox value="F">管理员-编辑</a-checkbox>
-                            </a-col>                    
                         </a-row>
                     </a-checkbox-group>
-                </div>    
-                <div class="permission-container">
-                    <div class="permission-title">
-                        <span>灵感库管理</span>
-                    </div>
-                    <a-checkbox-group v-model:value="inspirationValue" style="width: 100%"  class="permission-body">
-                        <a-row>
-                            <a-col :span="8">
-                                <a-checkbox value="A">类目-添加</a-checkbox>
-                            </a-col>
-                            <a-col :span="8">
-                                <a-checkbox value="B">类目-删除</a-checkbox>
-                            </a-col>
-                            <a-col :span="8">
-                              <a-checkbox value="C">类目-编辑</a-checkbox>
-                            </a-col>      
-                        </a-row>
-                    </a-checkbox-group>
-                </div> 
+                </div>
             </div>
         </div>
         <div class="create-btn-box">
@@ -101,47 +83,47 @@ async function createRole() {
 
 <style type="text/css" lang="less" scoped>
 .create-wrapper {
-    margin:5px;
-    padding:10px;
-    height:100%;
-    width:100%;
+    margin: 5px;
+    padding: 10px;
+    height: 100%;
+    width: 100%;
     background-color: #fff;
 
     .content-box {
-       .section-title {
-        font-weight: 600;
-    }
+        .section-title {
+            font-weight: 600;
+        }
 
-    .permission-section {
-        display: flex;
-        flex-direction: column;
-        gap:15px;
+        .permission-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
 
-        .permission-container {
-            border:1px solid #f0f0f0;
+            .permission-container {
+                border: 1px solid #f0f0f0;
 
-            .permission-title {
-                border-bottom:1px solid #f0f0f0;
-                padding:15px;
-                
-                span {
-                    font-size: 15px;
-                    font-weight: 600;
+                .permission-title {
+                    border-bottom: 1px solid #f0f0f0;
+                    padding: 15px;
+
+                    span {
+                        font-size: 15px;
+                        font-weight: 600;
+                    }
+                }
+
+                .permission-body {
+                    padding: 18px;
                 }
             }
-
-            .permission-body {
-                padding:18px;
-            }
         }
-    } 
     }
 
     .create-btn-box {
         display: flex;
         justify-content: flex-end;
-        padding:45px;
+        padding: 45px;
     }
-    
+
 }
 </style>

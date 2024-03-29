@@ -44,7 +44,7 @@ appRouter.beforeEach(async (to, from, next) => {
 
       if (!userInfo || !permissions) {
         const userInfoResponse = await userService.getUserInfo()
-        const permissionsResponse = await permissionService.permissions()
+        const permissionsResponse = await permissionService.permissions()      
         localStorage.setItem('userInfo', JSON.stringify(userInfoResponse.data.userInfo));
         localStorage.setItem('permissions', JSON.stringify(permissionsResponse.data.permissionSlug));
       }

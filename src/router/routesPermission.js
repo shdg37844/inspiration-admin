@@ -2,8 +2,6 @@ const RoleIndex = () =>
   import(/* webpackChunkName: "permission" */ '@/views/Permission/RoleIndex.vue')
 const RoleEdit = () =>
   import(/* webpackChunkName: "permission" */ '@/views/Permission/RoleEdit.vue')
-const RoleShow = () =>
-  import(/* webpackChunkName: "permission" */ '@/views/Permission/RoleShow.vue')
 const ManagerIndex = () =>
   import(/* webpackChunkName: "permission" */ '@/views/Permission/ManagerIndex.vue')
 const RoleCreate = () =>
@@ -55,14 +53,15 @@ export default [
         }
       },
       {
-        path: 'role/:id',
-        name: 'RoleShow',
-        component: RoleShow
-      },
-      {
         path: 'role/:id/edit',
         name: 'RoleEdit',
-        component: RoleEdit
+        component: RoleEdit,
+        meta: {
+          breadcrumb: {
+            name: '角色编辑',
+            path: '/permission/role/:id/edit'
+          }
+        }
       },
       {
         path: 'manager',

@@ -9,14 +9,13 @@ const roleService = {
         const url = API.roleAction.replace(':id', id)
         return request.delete(url)
     },
-    createRole(roleName) {
-        return request.post(API.roleInfo, roleName)
+    createRole(roleName, permissions) {
+        return request.post(API.roleInfo, { name: roleName, permissions: permissions })
     },
-    createRolePermissions(submitData) {
-        const url = API.RolePermissions.replace(':id', submitData.id)
-        return request.post(url, submitData)
+    getCurrentRole(id) {
+        const url = API.roleAction.replace(':id', id)
+        return request.get(url)
     },
-
 }
 
 export default roleService
