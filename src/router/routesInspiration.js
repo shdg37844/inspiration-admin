@@ -1,5 +1,7 @@
 const ClassifyIndex = () => 
     import(/* webpackChunkName: "inspiration" */ '@/views/Inspiration/classifyIndex.vue')
+const ClassifyCreate = () =>
+    import(/* webpackChunkName: "permission" */ '@/views/Inspiration/classifyCreate.vue')
 
 export default [
     {
@@ -32,7 +34,18 @@ export default [
                         path: '/inspiration/classify'
                     }
                 },
-            }
+            },
+            {
+                path: 'classify/create',
+                name: 'ClassifyCreate',
+                component: ClassifyCreate,
+                meta: {
+                    breadcrumb: {
+                        name: '类目创建',
+                        path: '/inspiration/classify/create'
+                    }
+                }
+            },
         ]
     }
 ]

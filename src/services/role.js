@@ -16,6 +16,14 @@ const roleService = {
         const url = API.roleAction.replace(':id', id)
         return request.get(url)
     },
+    updateCurrentRole(id, name) {
+        const url = API.roleAction.replace(':id', id)
+        return request.put(url, { name })
+    },
+    updateCurrentRolePermissions(id, permissions) {
+        const url = API.RolePermissions.replace(':id', id)
+        return request.put(url, { permissions })
+    },
 }
 
 export default roleService

@@ -25,7 +25,6 @@ fetchPermission()
 async function createRole() {
     const roleName = formState.value.roleName
     const permissions = Object.values(selectedPermissionsByGroup.value).flat();
-    //console.log("选中的permission", permissions)
 
     try {
         const response = await roleService.createRole(roleName, permissions);
@@ -46,7 +45,10 @@ async function createRole() {
 <template>
     <div class="create-wrapper">
         <div class="content-box">
-            <h3 class="section-title">角色信息</h3>
+            <div class="section-title">
+                <span class="title">角色信息</span>
+                <span class="back-btn" @click="$router.push('/permission/role')">返回</span>
+            </div>
             <div class="section-content">
                 <a-form :model="formState" name="basic" :label-col="{ span: 2 }" :wrapper-col="{ span: 6 }"
                     autocomplete="off">
@@ -91,7 +93,25 @@ async function createRole() {
 
     .content-box {
         .section-title {
-            font-weight: 600;
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            margin-bottom: 30PX;
+            padding-right: 45px;
+
+            .title {
+                font-size: 20px;
+                font-weight: 600;
+            }
+
+            .back-btn {
+                font-size: 18px;
+            }
+
+            .back-btn:hover {
+                text-decoration: underline;
+                cursor: pointer;
+            }
         }
 
         .permission-section {

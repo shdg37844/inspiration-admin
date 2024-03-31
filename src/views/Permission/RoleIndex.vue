@@ -46,7 +46,6 @@ async function deleteRole(selectedId) {
     if (response.error_code === 0) {
       const index = data.value.findIndex(item => item.id === id)
       data.value.splice(index, 1)
-
     } else {
       console.error(response.message)
     }

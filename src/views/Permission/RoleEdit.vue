@@ -28,9 +28,9 @@ async function fectchCurrentRoleInfo() {
         const role = roleResponse.data.role;
         formState.value = role;
 
-        const permissionResponse = await permissionService.getCurrentRolePermissions(id);
-        const permissions = permissionResponse.data.permissions
-        
+        const permissionResponse = roleResponse.data.permissionsByGroup
+
+        selectedPermissionsByGroup.value = permissionResponse
 
     } catch (e) {
         console.error(e);
@@ -38,7 +38,26 @@ async function fectchCurrentRoleInfo() {
 }
 fectchCurrentRoleInfo()
 
+async function handleSaveEdit() {
+    const id = route.params.id
+    const name = formState.value.name
+    const PermissionsByGroup = selectedPermissionsByGroup.value
+    const permissions = Object.values(PermissionsByGroup).flat()
 
+    try {
+        const RoleNameResponse = await roleService.updateCurrentRole(id, name)
+        const RolePermissionsResponse = await roleService.updateCurrentRolePermissions(id, permissions)
+    
+        if (RoleNameResponse.error_code === 0 && RolePermissionsResponse.error_code === 0) {
+            alert("修改成功");
+            router.push('/permission/role')
+        }
+        
+    } catch (e) {
+        console.error(e);
+    }
+
+}
 
 </script>
 
@@ -74,7 +93,7 @@ fectchCurrentRoleInfo()
             </div>
         </div>
         <div class="create-btn-box">
-            <a-button type="primary">保存</a-button>
+            <a-button type="primary" @click="handleSaveEdit()">保存</a-button>
         </div>
     </div>
 </template>
