@@ -1,5 +1,27 @@
 <script setup>
+import { useStore } from '@/stores/index.js' 
+import { useRouter } from 'vue-router'
 import { HeartOutlined, PoweroffOutlined, DownOutlined } from '@ant-design/icons-vue'
+import Cookies from 'js-cookie'
+
+
+const store = useStore()
+const router = useRouter()
+const TOKEN_KEY = 'web_token'
+
+const logout = () => {
+  store.setUserInfo(null)
+  store.setPermissions([])
+
+
+  localStorage.removeItem(TOKEN_KEY)
+
+  Cookies.remove(TOKEN_KEY) 
+
+  router.push({ name: 'AccountLogin' })
+}
+
+
 </script>
 
 <template>
@@ -19,9 +41,9 @@ import { HeartOutlined, PoweroffOutlined, DownOutlined } from '@ant-design/icons
         </div>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item
-              ><PoweroffOutlined :style="{ marginRight: '4px' }" /> 退出</el-dropdown-item
-            >
+            <el-dropdown-item @click="logout()">
+              <PoweroffOutlined :style="{ marginRight: '4px' }" /> 退出
+            </el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>

@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
-import classifyService from '@/services/classify.js';
 import { useRouter } from 'vue-router';
+import classifyService from '@/services/classify.js';
 
 const router = useRouter();
 const data = ref([]);
@@ -18,8 +18,8 @@ const columns = [
     },
     {
         title: '分类',
-        dataIndex: 'parent',
-        key: 'parent',
+        dataIndex: 'parentName',
+        key: 'parentName',
     },
     {
         title: '操作',
@@ -30,7 +30,7 @@ const columns = [
 async function fetchClassifyInfo() {
     try {
         const response = await classifyService.getAllClassify();
-        data.value = response.data.
+        data.value = response.data.classify
 
     } catch (e) {
         console.error(e);
@@ -38,8 +38,8 @@ async function fetchClassifyInfo() {
 }
 fetchClassifyInfo();
 
-async function deleteRole(selectedId) {
-    const isConfirmed = confirm("确认删除该角色？");
+async function deleteClassify(selectedId) {
+    const isConfirmed = confirm("确认删除该类目？");
 
     if (!isConfirmed) {
         return;
@@ -47,21 +47,16 @@ async function deleteRole(selectedId) {
 
     let id = selectedId;
     try {
-        const response = await roleService.deleteRole(id);
-        if (response.error_code === 0) {
+        const response = await classifyService.deleteClassify(id);
+        if (response.code === 200) {
             const index = data.value.findIndex(item => item.id === id)
             data.value.splice(index, 1)
-        } else {
-            console.error(response.message)
         }
     } catch (e) {
         console.error(e);
     }
 }
 
-function handleOpenEditPage(id) {
-    router.push(`/permission/role/${id}/edit`)
-}
 
 </script>
 

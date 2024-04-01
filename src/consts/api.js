@@ -23,4 +23,6 @@ export default {
   RolePermissions: `${ADMIN_PREFIX}/role/:id/permissions`,
 
   classify: `${ADMIN_PREFIX}/classify`,
+  parent_classify: `${ADMIN_PREFIX}/parent-classify`,
+  selectedClassify: `${ADMIN_PREFIX}/classify/:id`,
 }

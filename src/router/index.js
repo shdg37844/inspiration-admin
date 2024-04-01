@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import cookies from 'js-cookie'
+import Cookies from 'js-cookie'
 import routes from './routes'
 import NProgress from 'nprogress'
 import userService from '@/services/user'
@@ -19,54 +19,47 @@ const appRouter = createRouter({
   }
 })
 
-// 只触发一次的锁
-appRouter.firstInit = false
 appRouter.beforeEach(async (to, from, next) => {
-  NProgress.start()
+  NProgress.start();
 
-  if (to.meta.title) document.title = to.meta.title
+  if (to.meta.title) document.title = to.meta.title;
 
-  const store = useStore()
-  const token = cookies.get(TOKEN_KEY)
-  //const token = localStorage.getItem(TOKEN_KEY)
+  const store = useStore();
+  const token = Cookies.get(TOKEN_KEY); // 确保正确地引用了Cookies库
 
-  // 没有 TOKEN 的情况下的处理，要么跳走，要么去登录页面。
+  // 没有 TOKEN 的情况下的处理
   if (!token && !['AccountLogin'].includes(to.name)) {
-    next({ name: 'AccountLogin' })
-    return
+    next({ name: 'AccountLogin' });
+    return;
   }
 
-  // 有 TOKEN 的情况下只请求一次用户信息
-  if (token && !appRouter.firstInit) {
+  // 有 TOKEN 的情况下，每次路由跳转都尝试获取最新的用户信息和权限
+  if (token) {
     try {
-      let userInfo = JSON.parse(localStorage.getItem('userInfo'));
-      let permissions = JSON.parse(localStorage.getItem('permissions'));
+      // 直接从后端API获取用户信息和权限
+      const userInfoResponse = await userService.getUserInfo();
+      const permissionsResponse = await permissionService.permissions();
 
-      if (!userInfo || !permissions) {
-        const userInfoResponse = await userService.getUserInfo()
-        const permissionsResponse = await permissionService.permissions()      
-        localStorage.setItem('userInfo', JSON.stringify(userInfoResponse.data.userInfo));
-        localStorage.setItem('permissions', JSON.stringify(permissionsResponse.data.permissionSlug));
-      }
-
-      store.setUserInfo(userInfo)
-      store.setPermissions(permissions)
+      // 更新Pinia状态管理中的用户信息和权限
+      store.setUserInfo(userInfoResponse.data.userInfo);
+      store.setPermissions(permissionsResponse.data.permissionSlug);
 
       // 没有任何权限要么跳走，要么去提示页面
-      if (!permissions?.length) {
-        next({ name: 'Forbidden' })
-        return
+      if (!permissionsResponse.data.permissionSlug?.length) {
+        next({ name: 'Forbidden' });
+        return;
       }
-
-      appRouter.firstInit = true
     } catch (e) {
-      next()
-      return
+      // 如果在获取用户信息或权限时出现错误，可以选择重定向到登录页或者显示错误信息
+      // 这里选择重定向到登录页，并清除可能无效的Token
+      Cookies.remove(TOKEN_KEY);
+      next({ name: 'AccountLogin' });
+      return;
     }
   }
 
-  next()
-})
+  next();
+});
 
 // eslint-disable-next-line
 appRouter.afterEach((to, from) => {

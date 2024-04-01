@@ -10,6 +10,10 @@ const { permissions } = useStore()
 const isCollapse = ref(false)
 const navRoutes = ref(formatRoutes(routesAll, permissions))
 const activeIndex = ref(route.name)
+
+
+console.log("侧边栏路由:", navRoutes.value);
+
 </script>
 
 <template>
