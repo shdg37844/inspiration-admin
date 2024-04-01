@@ -13,7 +13,6 @@ const logout = () => {
   store.setUserInfo(null)
   store.setPermissions([])
 
-
   localStorage.removeItem(TOKEN_KEY)
 
   Cookies.remove(TOKEN_KEY) 

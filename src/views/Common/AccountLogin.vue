@@ -21,7 +21,7 @@ const smsRules = {
 const formData = ref({
   code: null,
   phone: null,
-  checked: false
+  //checked: false
 })
 
 const smsText = ref('发送验证码')
@@ -121,9 +121,9 @@ async function handleSubmit() {
               <el-button :smsDisabled="smsDisabled" @click="handleSmsCode">{{ smsText }}</el-button>
             </el-col>
           </el-form-item>
-          <el-form-item prop="checked">
+          <!-- <el-form-item prop="checked">
             <el-checkbox v-model="formData.checked">自动登录</el-checkbox>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item>
             <el-button style="width: 100%" type="primary" @click="handleSubmit">登录</el-button>
           </el-form-item>

@@ -25,7 +25,7 @@ appRouter.beforeEach(async (to, from, next) => {
   if (to.meta.title) document.title = to.meta.title;
 
   const store = useStore();
-  const token = Cookies.get(TOKEN_KEY); // 确保正确地引用了Cookies库
+  const token = Cookies.get(TOKEN_KEY);
 
   // 没有 TOKEN 的情况下的处理
   if (!token && !['AccountLogin'].includes(to.name)) {
@@ -33,7 +33,6 @@ appRouter.beforeEach(async (to, from, next) => {
     return;
   }
 
-  // 有 TOKEN 的情况下，每次路由跳转都尝试获取最新的用户信息和权限
   if (token) {
     try {
       // 直接从后端API获取用户信息和权限
@@ -44,14 +43,22 @@ appRouter.beforeEach(async (to, from, next) => {
       store.setUserInfo(userInfoResponse.data.userInfo);
       store.setPermissions(permissionsResponse.data.permissionSlug);
 
+      
+
       // 没有任何权限要么跳走，要么去提示页面
       if (!permissionsResponse.data.permissionSlug?.length) {
         next({ name: 'Forbidden' });
         return;
       }
+
+      // 如果路由需要特定权限，但用户没有此权限，则重定向
+      if (to.meta.permission && !store.hasPermission(to.meta.permission)) {
+        next({ name: 'Forbidden' });
+        return;
+      } 
+
     } catch (e) {
-      // 如果在获取用户信息或权限时出现错误，可以选择重定向到登录页或者显示错误信息
-      // 这里选择重定向到登录页，并清除可能无效的Token
+      // 这里重定向到登录页，并清除可能无效的Token
       Cookies.remove(TOKEN_KEY);
       next({ name: 'AccountLogin' });
       return;
